@@ -1,28 +1,25 @@
 from locust import HttpUser, TaskSet
 
-def Create_user(l):
-    l.client.post("/users", {"id": 3, "name": "Iaiceslav", "age": 113})
-
-def Get_list(l):
+def start_get(l):
     l.client.get("/Users")
 
-def Update_user(l):
-    l.client.put("/users/3", {"id": 3, "name": "Iaiceslav Velikii", "age": 113})
+def get_user1(l):
+    l.client.get("/users/1")
 
-def Get_user(l):
-    l.client.get("/users/3")
+def get_user2(l):
+    l.client.get("/users/2")
 
-def Del_user(l):
-    l.client.delete("/users/3")
+def finish_get(l):
+    l.client.get("/users")
 
 class UserBehavior(TaskSet):
-    tasks = {Get_list: 2, Update_user: 1, Get_user: 1}
+    tasks = {get_user1: 2, get_user2: 1}
 
     def on_start(self):
-        Create_user(self)
+        start_get(self)
 
     def on_stop(self):
-        Del_user(self)
+        finish_get(self)
 
 class WebsiteUser(HttpUser):
     task_set = UserBehavior
